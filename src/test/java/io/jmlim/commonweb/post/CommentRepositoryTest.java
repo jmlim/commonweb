@@ -4,6 +4,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.data.domain.Page;
@@ -14,7 +16,8 @@ import static io.jmlim.commonweb.post.CommentSpecs.isBest;
 import static io.jmlim.commonweb.post.CommentSpecs.isGood;
 
 @RunWith(SpringRunner.class)
-@DataJpaTest
+// @DataJpaTest // repository bean 만 찾음.
+@SpringBootTest
 public class CommentRepositoryTest {
 
     @Autowired

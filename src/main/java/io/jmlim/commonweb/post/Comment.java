@@ -1,6 +1,13 @@
 package io.jmlim.commonweb.post;
 
+import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedBy;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
 import javax.persistence.*;
+import java.util.Date;
 
 // 코멘트 포스트의 포스트의 연관관계는 EAGER 로 가져옴.
 
@@ -10,6 +17,7 @@ import javax.persistence.*;
 @NamedEntityGraph(name = "Comment.post",
         attributeNodes = @NamedAttributeNode("post"))
 @Entity
+@EntityListeners(AuditingEntityListener.class)
 public class Comment {
 
     @Id
@@ -27,6 +35,27 @@ public class Comment {
     private int down;
 
     private boolean best;
+
+    /**
+     * 누가 이걸 수정했고..  엔티티의 변화가 발생할 때마다 바꾸고 싶을때..start
+     */
+    @CreatedDate
+    private Date created;
+
+    @CreatedBy
+    @ManyToOne
+    private Account createdBy;
+
+    @LastModifiedDate
+    private Date updated;
+
+    @LastModifiedBy
+    @ManyToOne
+    private Account updatedBy;
+
+    /**
+     * 누가 이걸 수정했고..  엔티티의 변화가 발생할 때마다 바꾸고 싶을때..end
+     */
 
     public Long getId() {
         return id;
@@ -74,5 +103,42 @@ public class Comment {
 
     public void setBest(boolean best) {
         this.best = best;
+    }
+
+    public Date getCreated() {
+        return created;
+    }
+
+    public void setCreated(Date created) {
+        this.created = created;
+    }
+
+    public Account getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(Account createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    public Date getUpdated() {
+        return updated;
+    }
+
+    public void setUpdated(Date updated) {
+        this.updated = updated;
+    }
+
+    public Account getUpdatedBy() {
+        return updatedBy;
+    }
+
+    public void setUpdatedBy(Account updatedBy) {
+        this.updatedBy = updatedBy;
+    }
+    
+    @PrePersist
+    public void prePersist() {
+        System.out.println("============ Pre Persist is called");
     }
 }
