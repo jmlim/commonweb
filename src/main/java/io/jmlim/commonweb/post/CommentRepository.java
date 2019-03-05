@@ -2,11 +2,12 @@ package io.jmlim.commonweb.post;
 
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
 import java.util.List;
 import java.util.Optional;
 
-public interface CommentRepository extends JpaRepository<Comment, Long> {
+public interface CommentRepository extends JpaRepository<Comment, Long>, JpaSpecificationExecutor<Comment> {
 
     /*
      * (기본값) FETCH: 설정한 엔티티 에트리뷰트는 EAGER 패치 나머지는 LAZY 패치.

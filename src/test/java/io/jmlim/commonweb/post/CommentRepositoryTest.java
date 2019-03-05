@@ -4,7 +4,12 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.junit4.SpringRunner;
+
+import static io.jmlim.commonweb.post.CommentSpecs.isBest;
+import static io.jmlim.commonweb.post.CommentSpecs.isGood;
 
 @RunWith(SpringRunner.class)
 @DataJpaTest
@@ -48,8 +53,31 @@ public class CommentRepositoryTest {
 
         commentRepository.findByPost_Id(1l, CommentOnly.class).forEach(c -> {
             System.out.println("====================");
-           // System.out.println(c.getVotes());
+            // System.out.println(c.getVotes());
             System.out.println(c.getComment());
         });
+    }
+
+    @Test
+    public void specs() {
+        // 클라이언트가 매우 간단해짐.
+        // 단 여러가지 조합이 들어갈 시 테스트를 철저히 해야한다는 점..
+        Page<Comment> page = commentRepository
+                .findAll(isBest().or(isGood()), PageRequest.of(0, 10));
+        /**
+         *    select
+         *         comment0_.id as id1_0_,
+         *         comment0_.best as best2_0_,
+         *         comment0_.comment as comment3_0_,
+         *         comment0_.down as down4_0_,
+         *         comment0_.post_id as post_id6_0_,
+         *         comment0_.up as up5_0_
+         *     from
+         *         comment comment0_
+         *     where
+         *         comment0_.best=1
+         *         or comment0_.up>=10 limit ?
+         * */
+
     }
 }
