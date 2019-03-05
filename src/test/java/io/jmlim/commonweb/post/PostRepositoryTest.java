@@ -11,6 +11,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -84,10 +85,10 @@ public class PostRepositoryTest {
         assertThat(all.size()).isEqualTo(1);
     }
 
-    private void savePost() {
+    private Post savePost() {
         Post post = new Post();
         post.setTitle("Spring Data Jpa");
-        postRepository.save(post);
+        return postRepository.save(post);
     }
 
     @Test
@@ -98,5 +99,33 @@ public class PostRepositoryTest {
         // JpaSort.unsafe() 를 사용하면 함수 호출을 할 수 있음.
         List<Post> all = postRepository.findByTitle("Spring Data Jpa", JpaSort.unsafe("LENGTH(title)"));
         assertThat(all.size()).isEqualTo(1);
+    }
+
+    // 추천 하지 않음.
+    /*@Test
+    public void updateTitle() {
+        Post spring = savePost();
+
+        String hibernate = "hibernate";
+        int updateCount = postRepository.updateTitle(hibernate, spring.getId());
+        assertThat(updateCount).isEqualTo(1);
+
+        // 셀렉트를 안함. (실패) ,, 한 트랜잭션 안에선 아직 캐시가 유지 됨. spring 은 아직 persist 상태임.
+        // 그 상태에서 find 를 하면 디비를 타지 않는다. 아직 persist 있는 상태의 객체는 아직 캐시에 있으므로 셀렉트가 되지 않음.
+        // 그래서 추천하지 않음.
+        // 그러므로 Modifiying  옵션에 clearAutomatically = true(퍼시스턴스 컨텍스트에 있는 객체 클리어), flushAutomatically = true 추가하는것..
+        // 어쨌든 추천하지 않는다.
+        Optional<Post> byId = postRepository.findById(spring.getId());
+        assertThat(byId.get().getTitle()).isEqualTo(hibernate);
+    }*/
+
+    // 이렇게 하는것을 추천..
+    @Test
+    public void updateTitle() {
+        Post spring = savePost();
+        spring.setTitle("hibernate");
+
+        List<Post> all = postRepository.findAll();
+        assertThat(all.get(0).getTitle()).isEqualTo("hibernate");
     }
 }
