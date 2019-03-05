@@ -26,6 +26,11 @@ public class Comment {
 
     private String comment;
 
+    //기본값이 EnumType.ORDINAL 로 되어있음
+    //순서가 바뀌면 큰일이 나기 때문에 EnumType.STRING 로 변경해주어야 안전하다
+    @Enumerated(value = EnumType.STRING)
+    private CommentStatus commentStatus;
+
     // One 으로 끝나는 건 기본값이 Eager 임.
     @ManyToOne(fetch = FetchType.LAZY)
     private Post post;
@@ -136,7 +141,7 @@ public class Comment {
     public void setUpdatedBy(Account updatedBy) {
         this.updatedBy = updatedBy;
     }
-    
+
     @PrePersist
     public void prePersist() {
         System.out.println("============ Pre Persist is called");
