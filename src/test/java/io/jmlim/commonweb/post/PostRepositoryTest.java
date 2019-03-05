@@ -93,10 +93,9 @@ public class PostRepositoryTest {
     @Test
     public void findByTitle() {
         savePost();
-
-        //Sort 는 그 안에서 사용한 프로퍼티 또는  alias 가 엔티티에 없는 경우에는 예외가 발생.
+        // Sort 는 그 안에서 사용한 프로퍼티 또는  alias 가 엔티티에 없는 경우에는 예외가 발생.
         // List<Post> all = postRepository.findByTitle("Spring Data Jpa", Sort.by("title"));
-        //JpaSort.unsafe() 를 사용하면 함수 호출을 할 수 있음.
+        // JpaSort.unsafe() 를 사용하면 함수 호출을 할 수 있음.
         List<Post> all = postRepository.findByTitle("Spring Data Jpa", JpaSort.unsafe("LENGTH(title)"));
         assertThat(all.size()).isEqualTo(1);
     }
