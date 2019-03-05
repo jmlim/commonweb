@@ -46,7 +46,7 @@ public class PostRepositoryTest {
 
         assertThat(entityManager.contains(post)).isTrue(); // 영속화 상태
         assertThat(entityManager.contains(savedPost)).isTrue(); // 영속화 상태
-        assertThat(savedPost == post);
+        assertThat(savedPost == post).isTrue();
 
         Post postUpdate = new Post();
         postUpdate.setId(post.getId()); // 아이디가 있는 상태이므로 머지가 됨.
@@ -60,7 +60,7 @@ public class PostRepositoryTest {
 
         assertThat(entityManager.contains(updatedPost)).isTrue();
         assertThat(entityManager.contains(postUpdate)).isFalse(); //영속화 되지 않음.
-        assertThat(updatedPost == postUpdate);
+        assertThat(updatedPost == postUpdate).isFalse();
 
         postUpdate.setTitle("이거 바꾼다고 업데이트 안됨");
         updatedPost.setTitle("업데이터 되는놈");
