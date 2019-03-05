@@ -4,6 +4,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -79,5 +81,30 @@ public class CommentRepositoryTest {
          *         or comment0_.up>=10 limit ?
          * */
 
+    }
+
+    @Test
+    public void qbe() {
+        Comment prove = new Comment();
+        prove.setBest(true);
+
+        //조건을 유연하게 만들수도 없음..
+        // 커멘트가 포스트가 언제 이상 작성되었나.. 이런쿼리 못만들고 되게 제한적임.
+        ExampleMatcher exampleMatcher = ExampleMatcher.matchingAny().withIgnorePaths("up", "down");
+        Example<Comment> example = Example.of(prove, exampleMatcher);
+        commentRepository.findAll(example);
+        /*
+        * select
+            comment0_.id as id1_0_,
+            comment0_.best as best2_0_,
+            comment0_.comment as comment3_0_,
+            comment0_.down as down4_0_,
+            comment0_.post_id as post_id6_0_,
+            comment0_.up as up5_0_
+        from
+            comment comment0_
+        where
+            comment0_.best=?
+        * */
     }
 }
